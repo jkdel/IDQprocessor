@@ -7,8 +7,8 @@
 IDQ2eset(
   path,
   col_before = "Measurement Time",
-  LOD_string = "LOD \\\\(calc\\\\.\\\\) ([0-9]+)/([0-9]+)",
-  LOD_rep = "\\\\1 - \\\\2",
+  LOD_string = "LOD \\\\(calc\\\\.\\\\) ([0-9]+)/([0-9]+) \\\\[µM\\\\]",
+  LOD_rep = "\\\\1-\\\\2",
   plate_code = "Plate Bar Code"
 )
 }
