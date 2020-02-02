@@ -1,0 +1,19 @@
+Package: IDQprocessor
+Title: Framework To Organize And Process Excel Files Exported From MetIDQ
+Version: 0.0.0.9000
+Authors@R: 
+    person(given = "Julien",
+           family = "Delarocque",
+           role = c("aut", "cre"),
+           email = "jkdelarocque@gmail.com",
+           comment = c(ORCID = "0000-0002-4598-3499"))
+Description: Expand the MultiAssayExperiment API for easier data manipulation and processing.
+Depends: R (>= 2.10)
+License: CC BY-SA 4.0
+Encoding: UTF-8
+LazyData: true
+Imports:
+    openxlsx,
+    tidyr,
+    Biobase
+RoxygenNote: 7.0.2
