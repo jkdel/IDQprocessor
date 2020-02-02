@@ -2,6 +2,7 @@
 
 export(IDQ2eset)
 export(LOD_matrix)
+export(aggregate_eset)
 export(batches)
 export(plot_layout)
 export(processing_order)

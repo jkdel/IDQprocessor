@@ -46,8 +46,6 @@ batches <- function(eset, batch_ind = "Plate Production No.") {
   return(as.numeric(addNA(factor(eset[[batch_ind]]))))
 }
 
-# add annotations
-
 #' Get the matrix of LOD values for each metabolite with respect to batches.
 #'
 #' @param eset A Biobase::ExpressionSet.
