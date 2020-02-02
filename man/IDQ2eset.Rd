@@ -6,12 +6,10 @@
 \usage{
 IDQ2eset(
   path,
-  col_before = "Measurement.Time",
-  LOD_string = "LOD \\\\(calc\\\\.\\\\) ([0-9]+)/([0-9]+) \\\\[μM\\\\]",
+  col_before = "Measurement Time",
+  LOD_string = "LOD \\\\(calc\\\\.\\\\) ([0-9]+)/([0-9]+)",
   LOD_rep = "\\\\1 - \\\\2",
-  plate_code = "Plate.Bar.Code",
-  experimentData = Biobase::MIAME(),
-  try_annotate = T
+  plate_code = "Plate Bar Code"
 )
 }
 \arguments{
@@ -27,27 +25,10 @@ Defaults to "LOD \\(calc\\.\\) ([0-9]+)/([0-9]+) \\[µM\\]".}
 
 \item{plate_code}{Name of the column containing the Plate car code,
 typically "Plate.Bar.Code".}
-
-\item{experimentData}{Optional Biobase::MIAME object.}
-
-\item{try_annotate}{If `TRUE`, tries to annotate the metabolites using a
-custom annotation file.}
 }
 \value{
 A Biobase::ExpressionSet object.
 }
 \description{
 Transform an excel file from MetIDQ into a Biobase::ExpressionSet
-}
-\examples{
-\dontrun{
-IDQ2eset("orig/TiHo Juni2019_nn_nc.xlsx",
-         experimentData = MIAME(name = "Delarocque, Julien",
-                                lab = "Clinic for Horse, University of Veterinary Medicine Hannover, Foundation",
-                                contact = "julien.delarocque@tiho-hannover.de",
-                                title = "Equine Metabolome Seasonality in OGT",
-                                abstract = "19 horses were subjected to 5 OGTs at regular intervals over a one year period",
-                                samples = list(all = "Basal and 120 min EDTA Plasma samples"),
-                                normControls = list(intQC = "Own QC called 02-W11-OGT-P-30")))
-}
 }
