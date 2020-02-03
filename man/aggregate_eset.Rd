@@ -13,7 +13,8 @@ aggregate_eset(eset, ind_dupes, fun)
 duplicate values to aggregate.}
 
 \item{fun}{Aggregatation function. Should be able to handle both numeric and
-character vectors.}
+character vectors. Aggregation is performed sample wise for both the
+expression and the phenotype data, i.e. respectively column and row-wise.}
 }
 \value{
 A `Biobase::ExpressionSet`.

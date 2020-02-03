@@ -16,8 +16,10 @@ Encoding: UTF-8
 LazyData: true
 Imports:
     Biobase,
+    dplyr,
     methods,
     openxlsx,
+    stats,
     tidyr,
     utils
 RoxygenNote: 7.0.2
