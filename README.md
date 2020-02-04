@@ -1,3 +1,5 @@
+# Introduction
+
 When using Biocrates metabolomic panels, data is managed using the MetIDQ software. For data analysis in R is used excel files exported from MetIDQ without normalization.
 
 This package provides:
@@ -18,3 +20,10 @@ You can learn more about the `Biobase::ExpressionSet` [here](https://www.biocond
 # Limitations
 
 The package was written for my personal use and is still work in progress (bugs are to be expected)! It is provided under a [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) licence.
+
+# Installation
+
+This R package can be installed via github:
+```
+devtools::install_github("jkdel/IDQprocessor")
+```
