@@ -12,7 +12,7 @@ log_transform <- function(eset, log_base=2) {
   dat <- sweep(dat, 2, mins, function(y, min.val) {
     log((y + sqrt(y^2 + min.val^2))/2, base=log_base)
   })
-  exprs(eset) <- t(dat)
+  Biobase::exprs(eset) <- t(dat)
   return(eset)
 }
 
