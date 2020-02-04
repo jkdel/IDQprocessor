@@ -42,36 +42,39 @@ log_transform <- function(eset, log_base=2) {
 #'   measurement times (typically 1, and therefore default value). Will only be
 #'   used if the column corresponding to `measurement_column` is not a vector of
 #'   integers.
-#' @return Corrected table N*K
+#' @return A `Biobase::ExpressionSet`.
 #' @export
 #' @references Dunn et al. Nature Protocols 6, 1060-1083 (2011)
 qc_rlsc <- function(eset, qc_ind = "Sample Identification", degree = 2,
                     span =  0.75, measurement_col = "Measurement Time",
                     ref_index = 1) {
-  if (is.numeric(eset[[qc_ind]])) proc <- eset[[qc_ind]]
+  if (is.numeric(eset[[measurement_col]])) proc <- eset[[measurement_col]]
   else proc <- processing_order(eset, measurement_col, ref_index)
-  or <- base::order(proc)
   eset <- eset[,order(proc)]
+  or <- base::order(proc[base::order(proc)])
   tab <- as.data.frame(t(Biobase::exprs(eset)))
   if (is.numeric(eset[[qc_ind]])) {
-    if (base::table(eset[[qc_ind]]==1)["TRUE"]<2) stop("There are either not enough QC samples or the `qc_ind` column is not accurately formated. Please refer to ?qc_rlsc.")
+    if (base::table(eset[[qc_ind]]==1)["TRUE"]<2) stop("There are either not enough QC samples or the `qc_ind` column is not accurately formated. Please refer to ?qc_rlsc.", call. = F)
     colv <- eset[[qc_ind]]
   } else {
     res <- base::which(table(eset[[qc_ind]])>2)
-    if (length(res)>1) warning("There are more than one sample repeatedly measured. Will use the first one as reference QC.")
+    if (length(res)>1) warning("There are more than one sample repeatedly measured. Will use the first one as reference QC.", call. = F)
     colv <- base::ifelse(eset[[qc_ind]]==names(res)[[1]], 1, 2)
   }
-  if (or[base::which(colv==1)][[1]]!=1 | or[base::which(colv==1)][[1]]!=length(or))
-    warning("The first and/or last sample is not a QC. Some expression levels might not be adjusted and set to NA!")
-  if (length(base::which(colv==1))<length(or)/10)
-    warning("It seems that there are only very few QCs, normalization might not be accurate!")
+  if (or[base::which(colv==1)][[1]]!=1 | rev(or[base::which(colv==1)])[[1]]!=length(or))
+    warning("The first and/or last sample is not a QC. Some expression levels might not be adjusted and set to NA!", call. = F)
+  if (length(base::which(colv==1)*10)<length(or))
+    warning("It seems that there are only very few QCs, normalization might not be accurate!", call. = F)
   tab <- base::sapply(tab, function(x) {
-    ll <- stats::loess(x[which(colv == 1)] ~ or[which(colv == 1)],
+    x1 <- x[!is.na(x)]
+    or1 <- or[!is.na(x)]
+    colv1 <- colv[!is.na(x)]
+    lo <- stats::loess(x1[which(colv1 == 1)] ~ or1[which(colv1 == 1)],
                        span = span,
                        degree = degree,
                        control = stats::loess.control(surface = "direct"))
-		aa <- stats::approx(x = or[which(colv == 1)], y = ll$fitted, xout = or)
-		return(x / aa$y)
+		ap <- stats::approx(x = or1[which(colv1 == 1)], y = lo$fitted, xout = or)
+		return(x / ap$y)
   })
   Biobase::exprs(eset) <- t(tab)
   return(eset)
