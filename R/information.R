@@ -6,7 +6,7 @@
 #'
 #' @param eset A Biobase::ExpressionSet.
 #' @param measurement_col The name of the column containing the measurement
-#'   time (àefaults to "Measurement Time").
+#'   time (defaults to "Measurement Time").
 #' @param ref_index The index of the subcolumn to use for ordering of
 #'   measurement times (typically 1, and therefore default value).
 #' @return An integer vector of sample order.

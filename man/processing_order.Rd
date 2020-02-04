@@ -10,7 +10,7 @@ processing_order(eset, measurement_col = "Measurement Time", ref_index = 1)
 \item{eset}{A Biobase::ExpressionSet.}
 
 \item{measurement_col}{The name of the column containing the measurement
-time (àefaults to "Measurement Time").}
+time (defaults to "Measurement Time").}
 
 \item{ref_index}{The index of the subcolumn to use for ordering of
 measurement times (typically 1, and therefore default value).}

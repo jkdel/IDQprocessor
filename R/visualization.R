@@ -169,7 +169,8 @@ plot_features <- function(eset, by_batch = T, batch_ind = "Plate Production No."
   dat <- cbind.data.frame(dat, batch = batches(eset))
   dat <- tidyr::pivot_longer(dat, -batch, names_to = "Feature", values_to = "Expression")
   g <- ggplot(dat, aes(Feature, Expression, group=Feature)) +
-    geom_boxplot()
+    geom_boxplot() +
+    theme(axis.text.x = element_text(angle=45, hjust = 1))
   if (by_batch) g <- g + facet_wrap(. ~ batch)
   print(g)
   invisible(g)
