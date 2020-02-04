@@ -89,7 +89,7 @@ cvs_from_qcs <- function(eset, ind_qcs = "Sample Identification", by_batch = T,
                          batch_ind = "Plate Production No.") {
   qcs <- names(which(table(eset[[ind_qcs]])>1))
   dat <- eset[,eset[[ind_qcs]] %in% qcs]
-  dat <- data.frame(qc=dat[[ind_qcs]], batch=batches(dat, batch_ind), t(Biobase::exprs(dat)))
+  dat <- data.frame(qc=dat[[ind_qcs]], batch=batches(dat, batch_ind), t(Biobase::exprs(dat)), check.names = F)
   dat <- tidyr::pivot_longer(dat, -1:-2, names_to="Feature", values_to = "Expression")
   if (by_batch) dat <- dplyr::group_by(dat, Feature, batch, qc)
   else dat <- dplyr::group_by(dat, Feature, qc)

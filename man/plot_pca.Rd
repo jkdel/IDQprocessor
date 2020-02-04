@@ -6,23 +6,24 @@
 \usage{
 plot_pca(
   eset,
+  group,
   axes = 1:2,
   scaling = T,
-  group,
   ellipse = F,
   ellipse_prob = 0.68,
-  annotations
+  annotations,
+  plot = T
 )
 }
 \arguments{
 \item{eset}{A Biobase::ExpressionSet.}
 
+\item{group}{The variable to use to group observations.}
+
 \item{axes}{Numeric vector of length two specifying which components to draw.}
 
 \item{scaling}{Logical specifying if scaling should be performed, or function
 to use to perform scaling. Defaults to TRUE.}
-
-\item{group}{The variable to use to group observations.}
 
 \item{ellipse}{Logical specifying if a normal ellipse should be drawn for
 each group.}
@@ -30,6 +31,8 @@ each group.}
 \item{ellipse_prob}{Numerical, size of the ellipse under normal distribution.}
 
 \item{annotations}{The variable to use to name the points.}
+
+\item{plot}{Logical. Should the plot be plotted right away?}
 }
 \value{
 An invisible `ggplot()`.

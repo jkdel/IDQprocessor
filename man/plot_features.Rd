@@ -4,7 +4,7 @@
 \alias{plot_features}
 \title{Boxplot of each feature.}
 \usage{
-plot_features(eset, by_batch = T, batch_ind = "Plate Production No.")
+plot_features(eset, by_batch = T, batch_ind = "Plate Production No.", plot = T)
 }
 \arguments{
 \item{eset}{A Biobase::ExpressionSet.}
@@ -13,6 +13,8 @@ plot_features(eset, by_batch = T, batch_ind = "Plate Production No.")
 bacth.}
 
 \item{batch_ind}{Name of the column from where to derive batch information.}
+
+\item{plot}{Logical. Should the plot be plotted right away?}
 }
 \value{
 An invisible `ggplot()`.

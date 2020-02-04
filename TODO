@@ -1,0 +1,10 @@
+Visualization functions:
+* Scree Plot?
+* Bi Plot
+* Heatmap
+* t-SNE
+
+General aspects:
+* add normalization infos into MIAME object on the fly?
+* add examples
+* add more assertions of correct input

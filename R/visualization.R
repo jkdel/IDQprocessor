@@ -6,6 +6,7 @@
 #' @param well_col Name of the column containing the well position.
 #' @param batch_ind The name of the column containing the information to use for
 #'   determining the batches. Defaults to "Plate Production No.).
+#' @param plot Logical. Should the plot be plotted right away?
 #' @return An invisible `ggplot()`.
 #' @example
 #' \notrun{
@@ -13,11 +14,9 @@
 #' }
 #' @import ggplot2
 #' @export
-plot_layout <- function(eset,
-                        highlight,
-                        fill = "Sample Type",
+plot_layout <- function(eset, highlight, fill = "Sample Type",
                         well_col = "Well Position",
-                        batch_ind = "Plate Production No.") {
+                        batch_ind = "Plate Production No.", plot = T) {
   pDat <- Biobase::pData(eset)
   pDat$PCol <- factor(((pDat[[well_col]]-1) %% 12)+1)
   pDat$PRow <- factor(((pDat[[well_col]]-1) %/% 12)+1)
@@ -43,36 +42,34 @@ plot_layout <- function(eset,
 #' Produce a PCA plot.
 #'
 #' @param eset A Biobase::ExpressionSet.
+#' @param group The variable to use to group observations.
 #' @param axes Numeric vector of length two specifying which components to draw.
 #' @param scaling Logical specifying if scaling should be performed, or function
 #'   to use to perform scaling. Defaults to TRUE.
-#' @param group The variable to use to group observations.
 #' @param ellipse Logical specifying if a normal ellipse should be drawn for
 #'   each group.
 #' @param ellipse_prob Numerical, size of the ellipse under normal distribution.
 #' @param annotations The variable to use to name the points.
+#' @param plot Logical. Should the plot be plotted right away?
 #' @return An invisible `ggplot()`.
 #' @seealso `ggbiplot::ggbiplot()`
 #' @import ggplot2
 #' @export
-plot_pca <- function(eset,
-                     axes = 1:2,
-                     scaling = T,
-                     group,
-                     ellipse = F,
-                     ellipse_prob=0.68,
-                     annotations) {
+plot_pca <- function(eset, group, axes = 1:2, scaling = T, ellipse = F,
+                     ellipse_prob=0.68, annotations, plot = T) {
   if (length(axes)!=2) stop("`axes` should be a numeric vector of length two.")
   dat <- t(Biobase::exprs(eset))
+  # first check null variance and only NA variables (otherwise there could be
+  # no complete cases)
+  del <- lapply(as.data.frame(dat), stats::var, na.rm = T)
+  del <- which(del==0|is.na(del))
+  if (length(del)>0) {
+    dat <- dat[,-del]
+    warning("Following features were removed because of null variance: ", names(del), call. = F)
+  }
   sel <- stats::complete.cases(dat)
   if (any(dim(dat[sel, ]) != dim(dat)))
     warning("Incomplete data. Only complete cases were used.", call. = F)
-  del <- which(lapply(as.data.frame(dat[sel,]), stats::sd)==0)
-  if (length(del)>0) {
-    dat <- dat[,-del]
-    # sel <- sel[-del]
-    warning("Following features were removed because of unit variance: ", names(del), call. = F)
-  }
   if (is.function(scaling)) {
     dat <- scaling(dat[sel, ])
     pca <- stats::prcomp(dat, scale. = FALSE)
@@ -127,11 +124,13 @@ plot_pca <- function(eset,
 #'   time (àefaults to "Measurement Time").
 #' @param ref_index The index of the subcolumn to use for ordering of
 #'   measurement times (typically 1, and therefore default value).
+#' @param plot Logical. Should the plot be plotted right away?
 #' @return An invisible `ggplot()`.
 #' @import ggplot2
 #' @export
 plot_qcs <- function(eset, features, ind_qcs = "Sample Identification",
-                     measurement_col = "Measurement Time", ref_index = 1) {
+                     measurement_col = "Measurement Time", ref_index = 1,
+                     plot = T) {
   eset$proc <- processing_order(eset, measurement_col, ref_index)
   # eset$batch <- factor(batches(eset, batch_ind))
   qcs <- names(which(table(eset[[ind_qcs]])>1))
@@ -161,10 +160,12 @@ plot_qcs <- function(eset, features, ind_qcs = "Sample Identification",
 #' @param by_batch Logical, `TRUE` if separate facets should be used for each
 #'   bacth.
 #' @param batch_ind Name of the column from where to derive batch information.
+#' @param plot Logical. Should the plot be plotted right away?
 #' @return An invisible `ggplot()`.
 #' @import ggplot2
 #' @export
-plot_features <- function(eset, by_batch = T, batch_ind = "Plate Production No.") {
+plot_features <- function(eset, by_batch = T,
+                          batch_ind = "Plate Production No.", plot = T) {
   dat <- t(Biobase::exprs(eset))
   dat <- cbind.data.frame(dat, batch = batches(eset))
   dat <- tidyr::pivot_longer(dat, -batch, names_to = "Feature", values_to = "Expression")
@@ -172,6 +173,23 @@ plot_features <- function(eset, by_batch = T, batch_ind = "Plate Production No."
     geom_boxplot() +
     theme(axis.text.x = element_text(angle=45, hjust = 1))
   if (by_batch) g <- g + facet_wrap(. ~ batch)
+  print(g)
+  invisible(g)
+}
+
+#' Plot the density of all features.
+#'
+#' @param eset A Biobase::ExpressionSet.
+#' @param alpha Level of transparency to use for the density curves.
+#' @param plot Logical. Should the plot be plotted right away?
+#' @return An invisible `ggplot()`.
+#' @import ggplot2
+#' @export
+plot_densities <- function(eset, alpha = 0.15, plot = T) {
+  dat <- as.data.frame(t(Biobase::exprs(eset)))
+  dat <- tidyr::pivot_longer(dat, dplyr::everything(), names_to = "Feature", values_to = "Expression")
+  g <- ggplot(dat, aes(x=Expression, group=Feature)) +
+    geom_density(color=alpha("black",alpha = alpha))
   print(g)
   invisible(g)
 }

@@ -9,7 +9,8 @@ plot_qcs(
   features,
   ind_qcs = "Sample Identification",
   measurement_col = "Measurement Time",
-  ref_index = 1
+  ref_index = 1,
+  plot = T
 )
 }
 \arguments{
@@ -25,6 +26,8 @@ time (àefaults to "Measurement Time").}
 
 \item{ref_index}{The index of the subcolumn to use for ordering of
 measurement times (typically 1, and therefore default value).}
+
+\item{plot}{Logical. Should the plot be plotted right away?}
 }
 \value{
 An invisible `ggplot()`.

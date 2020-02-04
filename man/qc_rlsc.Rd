@@ -35,7 +35,7 @@ used if the column corresponding to `measurement_column` is not a vector of
 integers.}
 }
 \value{
-Corrected table N*K
+A `Biobase::ExpressionSet`.
 }
 \description{
 Perform QC-RLSC for batch correction of chromatographic signal

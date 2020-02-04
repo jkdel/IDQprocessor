@@ -9,7 +9,8 @@ plot_layout(
   highlight,
   fill = "Sample Type",
   well_col = "Well Position",
-  batch_ind = "Plate Production No."
+  batch_ind = "Plate Production No.",
+  plot = T
 )
 }
 \arguments{
@@ -23,6 +24,8 @@ plot_layout(
 
 \item{batch_ind}{The name of the column containing the information to use for
 determining the batches. Defaults to "Plate Production No.).}
+
+\item{plot}{Logical. Should the plot be plotted right away?}
 }
 \value{
 An invisible `ggplot()`.
