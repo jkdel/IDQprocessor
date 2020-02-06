@@ -2,6 +2,7 @@
 
 export(IDQ2eset)
 export(LOD_matrix)
+export(add_summaries)
 export(aggregate_eset)
 export(batches)
 export(cvs_from_qcs)

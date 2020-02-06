@@ -18,3 +18,29 @@ aggregate_eset <- function(eset, ind_dupes, fun) {
     experimentData = Biobase::experimentData(eset)
   ))
 }
+
+#' Add summary features to a `Biobase::ExpressionSet`
+#'
+#' @param eset A `Biobase::ExpressionSet`.
+#' @param group_ind The name of the column of dData(eset) to use to find
+#'   values to aggregate.
+#' @param fun Aggregatation function to apply to each column. By default `sum`.
+#' @return A `Biobase::ExpressionSet`.
+#' @export
+add_summaries <- function(eset, group_ind, fun=sum) {
+  groups <- base::split(base::rownames(Biobase::fData(eset)),Biobase::fData(eset)[[group_ind]])
+  groups <- groups[sapply(groups,length)>1]
+  summaries <- t(base::sapply(groups, function(x) apply(Biobase::exprs(eset[x,]),2,fun)))
+  fd <- Biobase::fData(eset)
+  dd <- as.data.frame(base::matrix(nrow = length(groups),ncol = ncol(fd)))
+  colnames(dd) <- colnames(fd)
+  rownames(dd) <- names(groups)
+  dd[,group_ind] <- names(groups)
+  fd <- base::rbind(fd, dd)
+  return(Biobase::ExpressionSet(
+    assayData = base::rbind(Biobase::exprs(eset), summaries),
+    phenoData = Biobase::phenoData(eset),
+    featureData = methods::as(fd, "AnnotatedDataFrame"),
+    experimentData = Biobase::experimentData(eset)
+  ))
+}
