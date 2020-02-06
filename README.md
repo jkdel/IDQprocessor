@@ -17,7 +17,7 @@ This package provides:
 
 You can learn more about the `Biobase::ExpressionSet` [here](https://www.bioconductor.org/packages/release/bioc/vignettes/Biobase/inst/doc/ExpressionSetIntroduction.pdf). This data structure, initially developed for transcriptomic assays, ensures that the measured feature expression (e.g. in this case metabolite concentrations) stays with the sample data and any additional information like the LOD for each metabolite and batch. Filtering an `ExpressionSet` by sample data is easy and prevents getting mixed up between several tables, potentially not ordered accurately.
 
-# Limitations
+# Licence
 
 The package was written for my personal use and is still work in progress (bugs are to be expected)! It is provided under a [CC-BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) licence.
 
@@ -25,5 +25,6 @@ The package was written for my personal use and is still work in progress (bugs 
 
 This R package can be installed via github:
 ```
+BiocManager::install("Biobase")
 devtools::install_github("jkdel/IDQprocessor")
 ```

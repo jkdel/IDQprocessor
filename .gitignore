@@ -32,3 +32,4 @@ testing
 
 # R Environment Variables
 .Renviron
+.Rproj.user
