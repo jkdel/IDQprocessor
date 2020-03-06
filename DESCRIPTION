@@ -17,6 +17,8 @@ LazyData: true
 Imports:
     Biobase,
     dplyr,
+    future,
+    future.apply,
     methods,
     openxlsx,
     stats,

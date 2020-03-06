@@ -40,10 +40,10 @@ processing_order <- function(eset,
 #' @param eset A Biobase::ExpressionSet.
 #' @param batch_ind The name of the column containing the information to use for
 #'   determining the batches. Defaults to "Plate Production No.).
-#' @return An integer vector of batch numbers.
+#' @return Batches as factor.
 #' @export
 batches <- function(eset, batch_ind = "Plate Production No.") {
-  return(as.numeric(addNA(factor(eset[[batch_ind]]))))
+  return(addNA(factor(eset[[batch_ind]])))
 }
 
 #' Get the matrix of LOD values for each metabolite with respect to batches.

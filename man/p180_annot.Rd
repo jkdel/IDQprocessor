@@ -4,7 +4,7 @@
 \name{p180_annot}
 \alias{p180_annot}
 \title{Annotations for Biocrates IDQ p180.}
-\format{An object of class \code{data.frame} with 188 rows and 9 columns.}
+\format{An object of class \code{data.frame} with 188 rows and 11 columns.}
 \source{
 \url{http://www.smpdb.ca/}
 }
@@ -15,6 +15,6 @@ p180_annot
 Annotation informations based on the SMPDB. Some metabolites
   determined by FIA correspond to multiple isomeres. In these cases either
   the first best match in the HMDB database was taken, or no database ID was
-  provided.
+  provided. Last updated 2020-03-06.
 }
 \keyword{datasets}

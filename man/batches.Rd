@@ -13,7 +13,7 @@ batches(eset, batch_ind = "Plate Production No.")
 determining the batches. Defaults to "Plate Production No.).}
 }
 \value{
-An integer vector of batch numbers.
+Batches as factor.
 }
 \description{
 For large experiments with many samples, more than one IDQ Kit is often
