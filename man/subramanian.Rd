@@ -2,20 +2,20 @@
 % Please edit documentation in R/analysis.R
 \name{subramanian}
 \alias{subramanian}
-\title{Test for significance of enrichment using the Kolmogorow-Smirnow Test.}
+\title{Test for significance of enrichment}
 \usage{
 subramanian(p, set, nperm = 1000)
 }
 \arguments{
-\item{p}{All P-values associated with the factor of interest .}
+\item{p}{All p values associated with the factor of interest .}
 
 \item{set}{Indices of the p values associated with the pathway of interest.}
 
-\item{nperm}{Number of permutations to get a p-value by gene permutations.}
+\item{nperm}{Number of permutations to get a p-value of pathway significance.}
 }
 \value{
 A vector of p-values
 }
 \description{
-Test for significance of enrichment using the Kolmogorow-Smirnow Test.
+Test for significance of enrichment
 }

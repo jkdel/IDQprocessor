@@ -19,9 +19,11 @@ Imports:
     dplyr,
     future,
     future.apply,
+    furrr,
     methods,
     openxlsx,
+    rlang,
     stats,
     tidyr,
     utils
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0

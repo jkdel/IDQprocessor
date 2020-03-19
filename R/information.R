@@ -84,6 +84,7 @@ prop_below_LOD <- function(eset) {
 #' @param batch_ind The name of the column from where to derive batch
 #'   information.
 #' @return A data.frame with CVs by QC sample, metabolite and optionally batch.
+#' @importFrom rlang .data
 #' @export
 cvs_from_qcs <- function(eset, ind_qcs = "Sample Identification", by_batch = T,
                          batch_ind = "Plate Production No.") {
@@ -91,9 +92,9 @@ cvs_from_qcs <- function(eset, ind_qcs = "Sample Identification", by_batch = T,
   dat <- eset[,eset[[ind_qcs]] %in% qcs]
   dat <- data.frame(qc=dat[[ind_qcs]], batch=batches(dat, batch_ind), t(Biobase::exprs(dat)), check.names = F)
   dat <- tidyr::pivot_longer(dat, -1:-2, names_to="Feature", values_to = "Expression")
-  if (by_batch) dat <- dplyr::group_by(dat, Feature, batch, qc)
-  else dat <- dplyr::group_by(dat, Feature, qc)
+  if (by_batch) dat <- dplyr::group_by(dat, .data$Feature, .data$batch, .data$qc)
+  else dat <- dplyr::group_by(dat, .data$Feature, .data$qc)
   get_cv <- function(x) stats::sd(x,na.rm = T)/base::mean(x,na.rm = T)
-  dat <- dplyr::summarise(dat, CV = get_cv(Expression))
+  dat <- dplyr::summarise(dat, CV = get_cv(.data$Expression))
   dat
 }

@@ -4,7 +4,9 @@
 \name{p180_annot}
 \alias{p180_annot}
 \title{Annotations for Biocrates IDQ p180.}
-\format{An object of class \code{data.frame} with 188 rows and 11 columns.}
+\format{
+An object of class \code{data.frame} with 188 rows and 11 columns.
+}
 \source{
 \url{http://www.smpdb.ca/}
 }

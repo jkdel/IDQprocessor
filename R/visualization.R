@@ -13,6 +13,7 @@
 #' plot_layout(es, `Sample Identification` == "MMU08_EDTA_96dpi")
 #' }
 #' @import ggplot2
+#' @importFrom rlang .data
 #' @export
 plot_layout <- function(eset, highlight, fill = "Sample Type",
                         well_col = "Well Position",
@@ -25,11 +26,11 @@ plot_layout <- function(eset, highlight, fill = "Sample Type",
   if (!missing(highlight)) {
     pDat$high <- ifelse(eval(substitute(highlight), pDat),"red",NA)
   }
-  g <- ggplot(pDat, aes(PCol, PRow, fill = pDat[[fill]])) +
+  g <- ggplot(pDat, aes(.data$PCol, .data$PRow, fill = pDat[[fill]])) +
     scale_fill_discrete(fill) +
     scale_color_identity() +
     coord_equal() +
-    facet_wrap(. ~ batch) +
+    facet_wrap(. ~ .data$batch) +
     theme_void() +
     labs(x = NULL, y = NULL) +
     guides(fill = guide_legend(ncol = 5)) +
@@ -54,6 +55,7 @@ plot_layout <- function(eset, highlight, fill = "Sample Type",
 #' @return An invisible `ggplot()`.
 #' @seealso `ggbiplot::ggbiplot()`
 #' @import ggplot2
+#' @importFrom rlang .data
 #' @export
 plot_pca <- function(eset, group, axes = 1:2, scaling = T, ellipse = F,
                      ellipse_prob=0.68, annotations, plot = T) {
@@ -87,8 +89,8 @@ plot_pca <- function(eset, group, axes = 1:2, scaling = T, ellipse = F,
     labs(x = paste0(cols[[1]]," (",perc[[1]],"%)"), y = paste0(cols[[2]]," (",perc[[2]],"%)"))
   if (!missing(group)) {
     ppca$gp <- eval(substitute(group), Biobase::pData(eset))[sel]
-    g <- g + geom_point(data = ppca, aes(x, y, color = gp))
-  } else g <- g + geom_point(data = ppca, aes(x, y))
+    g <- g + geom_point(data = ppca, aes(.data$x, .data$y, color = .data$gp))
+  } else g <- g + geom_point(data = ppca, aes(.data$x, .data$y))
   if (ellipse && length(unique(ppca$gp))>1) {
     # mostly taken from
     # https://github.com/vqv/ggbiplot/blob/master/R/ggbiplot.r
@@ -104,11 +106,11 @@ plot_pca <- function(eset, group, axes = 1:2, scaling = T, ellipse = F,
     }))
     names(ell)[1:2] <- c("x", "y")
     ell$gp <- rep(unique(ppca$gp),each=100)
-    g <- g + geom_path(data = ell, aes(x, y, color = gp, group = gp))
+    g <- g + geom_path(data = ell, aes(.data$x, .data$y, color = .data$gp, group = .data$gp))
   }
   if (!missing(annotations)) {
     ppca$annot <- eval(substitute(annotations), Biobase::pData(eset))[sel]
-    g <- g + geom_text(data = ppca, aes(x, y, label = annot), hjust = 0, nudge_x = 0.05)
+    g <- g + geom_text(data = ppca, aes(.data$x, .data$y, label = .data$annot), hjust = 0, nudge_x = 0.05)
   }
   print(g)
   invisible(g)
@@ -127,6 +129,7 @@ plot_pca <- function(eset, group, axes = 1:2, scaling = T, ellipse = F,
 #' @param plot Logical. Should the plot be plotted right away?
 #' @return An invisible `ggplot()`.
 #' @import ggplot2
+#' @importFrom rlang .data
 #' @export
 plot_qcs <- function(eset, features, ind_qcs = "Sample Identification",
                      measurement_col = "Measurement Time", ref_index = 1,
@@ -142,12 +145,12 @@ plot_qcs <- function(eset, features, ind_qcs = "Sample Identification",
   #   m <- max(x$proc)
   #   ifelse(m==max(dat$proc), NA, m)
   # })
-  g <- ggplot(dat[is.na(dat$QC),], aes(proc, Expression)) +
+  g <- ggplot(dat[is.na(dat$QC),], aes(.data$proc, .data$Expression)) +
     geom_point(color="black",alpha=0.2,pch=19) +
-    geom_point(data=dat[!is.na(dat$QC),], aes(color=QC),pch=19) +
-    geom_line(data=dat[!is.na(dat$QC),], aes(color=QC, group=QC)) +
+    geom_point(data=dat[!is.na(dat$QC),], aes(color=.data$QC),pch=19) +
+    geom_line(data=dat[!is.na(dat$QC),], aes(color=.data$QC, group=.data$QC)) +
     # geom_vline(xintercept = bt+0.5) +
-    facet_wrap(. ~ Feature, scales = "free_y") +
+    facet_wrap(. ~ .data$Feature, scales = "free_y") +
     guides(color=guide_legend(direction = "horizontal")) +
     theme(legend.position = "top")
   print(g)
@@ -163,16 +166,17 @@ plot_qcs <- function(eset, features, ind_qcs = "Sample Identification",
 #' @param plot Logical. Should the plot be plotted right away?
 #' @return An invisible `ggplot()`.
 #' @import ggplot2
+#' @importFrom rlang .data
 #' @export
 plot_features <- function(eset, by_batch = T,
                           batch_ind = "Plate Production No.", plot = T) {
   dat <- t(Biobase::exprs(eset))
   dat <- cbind.data.frame(dat, batch = batches(eset))
-  dat <- tidyr::pivot_longer(dat, -batch, names_to = "Feature", values_to = "Expression")
-  g <- ggplot(dat, aes(Feature, Expression, group=Feature)) +
+  dat <- tidyr::pivot_longer(dat, -.data$batch, names_to = "Feature", values_to = "Expression")
+  g <- ggplot(dat, aes(.data$Feature, .data$Expression, group=.data$Feature)) +
     geom_boxplot() +
     theme(axis.text.x = element_text(angle=45, hjust = 1))
-  if (by_batch) g <- g + facet_wrap(. ~ batch)
+  if (by_batch) g <- g + facet_wrap(. ~ .data$batch)
   print(g)
   invisible(g)
 }
@@ -184,11 +188,12 @@ plot_features <- function(eset, by_batch = T,
 #' @param plot Logical. Should the plot be plotted right away?
 #' @return An invisible `ggplot()`.
 #' @import ggplot2
+#' @importFrom rlang .data
 #' @export
 plot_densities <- function(eset, alpha = 0.15, plot = T) {
   dat <- as.data.frame(t(Biobase::exprs(eset)))
   dat <- tidyr::pivot_longer(dat, dplyr::everything(), names_to = "Feature", values_to = "Expression")
-  g <- ggplot(dat, aes(x=Expression, group=Feature)) +
+  g <- ggplot(dat, aes(x=.data$Expression, group=.data$Feature)) +
     geom_density(color=alpha("black",alpha = alpha))
   print(g)
   invisible(g)
