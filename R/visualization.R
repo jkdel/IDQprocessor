@@ -35,8 +35,9 @@ plot_layout <- function(eset, highlight, fill = "Sample Type",
     labs(x = NULL, y = NULL) +
     guides(fill = guide_legend(ncol = 5)) +
     theme(legend.position = "top")
-  if (missing(highlight)) print(g + geom_tile(size = 1.2, width = 0.9, height = 0.9))
-  else print(g + geom_tile(size = 1.2, width = 0.9, height = 0.9, color = pDat[["high"]]))
+  if (missing(highlight)) g <- g + geom_tile(size = 1.2, width = 0.9, height = 0.9)
+  else g <- g + geom_tile(size = 1.2, width = 0.9, height = 0.9, color = pDat[["high"]])
+  if (plot) print(g)
   invisible(g)
 }
 
@@ -112,7 +113,7 @@ plot_pca <- function(eset, group, axes = 1:2, scaling = T, ellipse = F,
     ppca$annot <- eval(substitute(annotations), Biobase::pData(eset))[sel]
     g <- g + geom_text(data = ppca, aes(.data$x, .data$y, label = .data$annot), hjust = 0, nudge_x = 0.05)
   }
-  print(g)
+  if (plot) print(g)
   invisible(g)
 }
 
@@ -153,7 +154,7 @@ plot_qcs <- function(eset, features, ind_qcs = "Sample Identification",
     facet_wrap(. ~ .data$Feature, scales = "free_y") +
     guides(color=guide_legend(direction = "horizontal")) +
     theme(legend.position = "top")
-  print(g)
+  if (plot) print(g)
   invisible(dat)
 }
 
@@ -177,7 +178,7 @@ plot_features <- function(eset, by_batch = T,
     geom_boxplot() +
     theme(axis.text.x = element_text(angle=45, hjust = 1))
   if (by_batch) g <- g + facet_wrap(. ~ .data$batch)
-  print(g)
+  if (plot) print(g)
   invisible(g)
 }
 
@@ -195,6 +196,6 @@ plot_densities <- function(eset, alpha = 0.15, plot = T) {
   dat <- tidyr::pivot_longer(dat, dplyr::everything(), names_to = "Feature", values_to = "Expression")
   g <- ggplot(dat, aes(x=.data$Expression, group=.data$Feature)) +
     geom_density(color=alpha("black",alpha = alpha))
-  print(g)
+  if (plot) print(g)
   invisible(g)
 }
