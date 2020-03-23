@@ -87,7 +87,9 @@ plot_pca <- function(eset, group, axes = 1:2, scaling = T, ellipse = F,
   ppca <- stats::setNames(as.data.frame(ppca[,axes]),c("x","y"))
   g <- ggplot() +
     coord_equal() +
-    labs(x = paste0(cols[[1]]," (",perc[[1]],"%)"), y = paste0(cols[[2]]," (",perc[[2]],"%)"))
+    labs(x = paste0(cols[[1]]," (",perc[[1]],"%)"),
+         y = paste0(cols[[2]]," (",perc[[2]],"%)"),
+         color = deparse(substitute(group)))
   if (!missing(group)) {
     ppca$gp <- eval(substitute(group), Biobase::pData(eset))[sel]
     g <- g + geom_point(data = ppca, aes(.data$x, .data$y, color = .data$gp))
@@ -98,7 +100,8 @@ plot_pca <- function(eset, group, axes = 1:2, scaling = T, ellipse = F,
     # fd999409dfc8b52ec8d3ddb6341a14eafa7c7812
     theta <- c(seq(-pi, pi, length = 50), seq(pi, -pi, length = 50))
     circle <- cbind(cos(theta), sin(theta))
-    ell <- do.call(rbind.data.frame,lapply(split(ppca[,1:2],ppca$gp), function(x) {
+    spl <- split(ppca[,1:2],ppca$gp)
+    ell <- do.call(rbind.data.frame,lapply(spl, function(x) {
       if(nrow(x) <= 2) return(NULL)
       sigma <- stats::var(x)
       mu <- sapply(x,base::mean)
@@ -106,7 +109,7 @@ plot_pca <- function(eset, group, axes = 1:2, scaling = T, ellipse = F,
       data.frame(sweep(circle %*% chol(sigma) * ed, 2, mu, FUN = '+'))
     }))
     names(ell)[1:2] <- c("x", "y")
-    ell$gp <- rep(unique(ppca$gp),each=100)
+    ell$gp <- factor(rep(names(spl),each=100),levels=levels(ppca$gp))
     g <- g + geom_path(data = ell, aes(.data$x, .data$y, color = .data$gp, group = .data$gp))
   }
   if (!missing(annotations)) {
