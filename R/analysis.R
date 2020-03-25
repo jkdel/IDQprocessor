@@ -1,19 +1,22 @@
 #' Test for significance of enrichment using the Kolmogorov-Smirnow test.
 #'
-#' @param p All P-values associated with the factor of interest .
-#' @param set Indices of the P-values associated with the pathway of interest.
+#' @param p All P-values, coefficients or similar values associated with the factor of interest .
+#' @param set Indices of the values associated with the pathway of interest in p.
+#' @param alternative See `?ks.test`. Typically, for p-value should be "less".
+#'   For coefficents, or variable importance, where higher values are associated
+#'   with more importance variables, it should be "greater".
 #' @param nperm Number of permutations to get a P-value of pathway significance.
 #'
 #' @return A vector of p-values
 #' @importFrom stats ks.test
 #' @export
-subramanian <- function(p, set, nperm = 1000) {
-  ks.stat <- ks.test(p[set], p[-set], alternative = "less", exact = F)$statistic
+subramanian <- function(p, set, alternative="less", nperm = 1000) {
+  ks.stat <- ks.test(p[set], p[-set], alternative = alternative, exact = F)$statistic
   m <- length(p)
   n <- length(set)
   ks.perm <- sapply(1:nperm, function(i) {
     setperm <- sample(1:m, n, replace = FALSE)
-    ks.test(p[setperm], p[-setperm], alternative = "less", exact = F)$statistic
+    ks.test(p[setperm], p[-setperm], alternative = alternative, exact = F)$statistic
   })
   pperm <- 1 - sum(ks.stat < ks.perm) / nperm
   return(pperm)
@@ -22,12 +25,13 @@ subramanian <- function(p, set, nperm = 1000) {
 #' Perform metabolite set enrichment analysis (MSEA)
 #'
 #' @param metabolites A `data.frame` with the first column containing metabolite
-#'   IDs and the second column the associated P-values.
+#'   IDs and the second column the associated P-values, coefficients or similar values.
 #' @param pathways A `data.frame` with the first column containing a metabolite ID
 #'   and a second column containing a pathway ID, as obtained by `pathway_list()`.
 #' @param min.set.size Minimal size of a set.
 #' @param fun Function to call to get the enrichment statistic. Should take a
-#'   vector of P-values as first argument and the indices of the P-values
+#'   numeric vector of P-values or similar (e.g. VIP score,
+#'   absolute coefficients) as first argument and the indices of the values
 #'   belonging to the set of interest as second argument. Further arguments can
 #'   be passed by `...`.
 #' @param ... Further arguments to pass to the function calculating the
