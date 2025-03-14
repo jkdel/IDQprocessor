@@ -171,7 +171,6 @@ plot_qcs <- function(eset, features, ind_qcs = "Sample Identification",
 #' @return An invisible `ggplot()`.
 #' @import ggplot2
 #' @importFrom rlang .data
-#' @importFrom dplyr everything
 #' @export
 plot_features <- function(eset, by_batch = T,
                           batch_ind = "Plate Production No.", plot = T) {
