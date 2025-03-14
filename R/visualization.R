@@ -179,7 +179,7 @@ plot_features <- function(eset, by_batch = T,
     dat <- cbind.data.frame(dat, batch = batches(eset, batch_ind))
     dat <- tidyr::pivot_longer(dat, -.data$batch, names_to = "Feature", values_to = "Expression")
   } else {
-    dat <- tidyr::pivot_longer(dat, dplyr::everything(), names_to = "Feature", values_to = "Expression")
+    dat <- tidyr::pivot_longer(as.data.frame(dat), dplyr::everything(), names_to = "Feature", values_to = "Expression")
   }
   g <- ggplot(dat, aes(.data$Feature, .data$Expression, group=.data$Feature)) +
     geom_boxplot() +
