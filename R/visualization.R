@@ -171,12 +171,17 @@ plot_qcs <- function(eset, features, ind_qcs = "Sample Identification",
 #' @return An invisible `ggplot()`.
 #' @import ggplot2
 #' @importFrom rlang .data
+#' @importFrom dplyr everything
 #' @export
 plot_features <- function(eset, by_batch = T,
                           batch_ind = "Plate Production No.", plot = T) {
   dat <- t(Biobase::exprs(eset))
-  dat <- cbind.data.frame(dat, batch = batches(eset))
-  dat <- tidyr::pivot_longer(dat, -.data$batch, names_to = "Feature", values_to = "Expression")
+  if (by_batch) {
+    dat <- cbind.data.frame(dat, batch = batches(eset, batch_ind))
+    dat <- tidyr::pivot_longer(dat, -.data$batch, names_to = "Feature", values_to = "Expression")
+  } else {
+    dat <- tidyr::pivot_longer(dat, dplyr::everything(), names_to = "Feature", values_to = "Expression")
+  }
   g <- ggplot(dat, aes(.data$Feature, .data$Expression, group=.data$Feature)) +
     geom_boxplot() +
     theme(axis.text.x = element_text(angle=45, hjust = 1))
